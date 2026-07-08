@@ -177,6 +177,11 @@
         color: #334155;
     }
     
+    body.hide-tarif .tarif-header,
+    body.hide-tarif .tarif-cell {
+        display: none !important;
+    }
+    
     .dash-title {
         font-size: 18px; 
         font-weight: 800; 
@@ -933,9 +938,14 @@
         div.innerHTML = `
         <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
             <span class="dash-title">📱 Dashboard TKMKB</span>
-            <button class="btn-export" id="exportCSV">
-                <span>⬇</span> Export CSV
-            </button>
+            <div style="display:flex; gap:12px; align-items:center;">
+                <label style="font-size:12px; font-weight:600; cursor:pointer; color:#64748b; display:flex; align-items:center; gap:4px; user-select:none; margin:0;">
+                    <input type="checkbox" id="toggleTarif" style="cursor:pointer;" checked> Tampilkan Tarif RS
+                </label>
+                <button class="btn-export" id="exportCSV">
+                    <span>⬇</span> Export CSV
+                </button>
+            </div>
         </div>
     
         <div class="dashboard-grid">
@@ -1068,6 +1078,21 @@
                 this.nextElementSibling.classList.toggle("open");
             }
         });
+
+        // Toggle Tarif RS
+        let toggleTarif = document.getElementById("toggleTarif");
+        if (toggleTarif) {
+            let isHidden = localStorage.getItem("smartplus_hide_tarif") === "true";
+            toggleTarif.checked = !isHidden;
+            if (isHidden) document.body.classList.add("hide-tarif");
+            else document.body.classList.remove("hide-tarif");
+            
+            toggleTarif.addEventListener("change", function(e) {
+                localStorage.setItem("smartplus_hide_tarif", !e.target.checked);
+                if (!e.target.checked) document.body.classList.add("hide-tarif");
+                else document.body.classList.remove("hide-tarif");
+            });
+        }
     }
 
     /* ================= 8. INIT ================= */
